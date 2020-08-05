@@ -2,14 +2,13 @@ import express from "express";
 import socketIO from "socket.io";
 import HTTPServer from "http";
 import path from "path";
-import Database from "./database/Database.js";
+import database from "./database/Database.js";
 
 export default class Server {
   httpServer;
   app;
   io;
   DEFAULT_PORT = 5000;
-  database = new Database();
   constructor() {
     this.initialize();
   }
