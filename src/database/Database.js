@@ -100,6 +100,10 @@ class Database {
     const room = this.#rooms.find((room) => room.roomId === roomId);
     room.stream = true;
   }
+  stopStreamRoom(roomId) {
+    const room = this.#rooms.find((room) => room.roomId === roomId);
+    room.stream = false;
+  }
 
   joinRoom(user, roomId) {
     const room = this.#rooms.find((room) => room.roomId === roomId);

@@ -23,13 +23,9 @@ export default class Server {
     this.handleSocketConnection();
   }
 
-  configureApp() {
-    
-  }
+  configureApp() {}
 
-  configureRoutes() {
-   
-  }
+  configureRoutes() {}
 
   updateRooms(socket) {
     const rooms = database.getRooms();
@@ -120,17 +116,18 @@ export default class Server {
           .getUsers()
           .find((user) => user.name === room.owner);
 
-        for (const user of room.users) {
+        room.users.forEach((user) => {
           //отправляем стримеру userId чтобы стример позвонил юзеру
-          socket.to(streamer.userId).emit("action", {
+          socket.emit("action", {
             type: "watcher",
             payload: { userId: user.userId },
           });
-          console.log("action", {
-            type: "watcher",
-            payload: { userId: user.userId },
-          });
-        }
+        });
+      });
+
+      socket.on("stop-stream-room", ({ roomId }) => {
+        database.stopStreamRoom(roomId);
+        this.updateRooms(socket);
       });
 
       socket.on("join-room", ({ roomId }) => {
@@ -168,7 +165,7 @@ export default class Server {
           payload: { userId: socket.id, description },
         });
       });
-      
+
       socket.on("answer", ({ userId, description }) => {
         socket.to(userId).emit("action", {
           type: "answer",
